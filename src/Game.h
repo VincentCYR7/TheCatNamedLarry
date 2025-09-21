@@ -35,6 +35,7 @@ private:
 	const Texture knightTexture{U"Assets/knight.png"};
 	const Texture grassTexture{U"Assets/grass.png"};
 	const Texture enemyTexture{U"Assets/enemy.png"};
+	const Texture larryTexture{U"Assets/larry.png"};
 	const Vec2 test{400,300};
 	std::vector<std::unique_ptr<Entity>> entities;
 

@@ -8,7 +8,7 @@ using App = SceneManager<String>;
 
 void Main()
 {
-	Window::SetTitle(U"兵士はつらいよ");
+	Window::SetTitle(U"The Cat Named Larry");
 	Window::Resize(1280, 720);
 
 	FontAsset::Register(U"TitleFont", FontMethod::MSDF, 48, Typeface::Bold);

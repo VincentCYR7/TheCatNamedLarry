@@ -88,7 +88,7 @@ void Player::draw() {
         knightAtkTexture.scaled(0.2).mirrored(facingLeft).drawAt(position);
 		//hitbox.drawFrame(2, ColorF(1.0, 0.0, 0.0));
     } else {
-        texture.scaled(0.2).mirrored(facingLeft).drawAt(position);
+        texture.scaled(0.2).mirrored(!facingLeft).drawAt(position);
     }
 
 	//collider.draw();

@@ -12,7 +12,7 @@ Game::Game(const InitData& init)
 
 	king = new KingMoveManager(100, 75, 120, 100, 10);
 
-	player = new Player(Vec2{ 400,300 }, knightTexture);
+	player = new Player(Vec2{ 400,300 }, larryTexture);
 
 	queen = new Entity(king->queenPos, queenTexture);
 
