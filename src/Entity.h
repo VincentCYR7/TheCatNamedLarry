@@ -6,8 +6,8 @@ protected:
     s3d::Vec2 position;
     s3d::Texture texture;
 	Size size;
-	bool isGrounded = false;
-	Vec2 velocity = Vec2{ 0, 0 };
+	
+	
 	const double gravity = 980.0; 
 
 public:
@@ -24,4 +24,10 @@ public:
 	void SetPos(Vec2 pos);
 
 	Vec2 GetPos() const;
+
+	virtual RectF getHitbox() const = 0;
+
+	bool isGrounded = false;
+
+	Vec2 velocity = Vec2{ 0, 0 };
 };

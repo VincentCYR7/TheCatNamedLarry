@@ -3,6 +3,8 @@
 # include <Siv3D.hpp>
 # include "Entity.h"
 # include "Player.h"
+# include "GamePlatform.h"
+# include "CollisionManager.h"
 
 
 class Game : public SceneManager<String>::Scene
@@ -28,9 +30,13 @@ private:
 
 	Stopwatch m_stopwatch;
 	const Texture larryTexture{U"Assets/larry.png"};
+	const Texture platformTex{ U"Assets/platform.png" };
 	const Vec2 test{400,300};
 	std::vector<std::unique_ptr<Entity>> entities;
+	std::vector<GamePlatform*> platforms;
+
 
 	Player* player;
+	CollisionManager* collisionManager;
 
 };

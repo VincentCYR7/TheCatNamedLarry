@@ -8,12 +8,27 @@ Game::Game(const InitData& init)
 	Scene::SetBackground(ColorF{ 0.7, 0.7, 0.7 });
 
 
-
-	player = new Player(Vec2{ 400,300 }, larryTexture, Size(100,100));
+	player = new Player(Vec2{ 400,300 }, larryTexture, Size(50,50));
 
 	entities.push_back(std::unique_ptr<Player>(player));
+	
+	collisionManager = new CollisionManager();
 
-	scrolling = true;
+
+	for (int i = 0; i < 5; ++i) {
+    	Vec2 pos{ 100 + i * 100, 500 }; 
+    	// Create a GamePlatform and immediately upcast to unique_ptr<Entity>
+    	std::unique_ptr<Entity> entityPtr = std::make_unique<GamePlatform>(pos, platformTex, Size{100, 100});
+
+    	// Push into entities
+    	entities.push_back(std::move(entityPtr));
+
+		platforms.push_back(static_cast<GamePlatform*>(entities.back().get()));
+
+	}
+
+
+	scrolling = false;
 
 }
 
@@ -23,7 +38,8 @@ Game::~Game()
 
 void Game::update()
 {
-	//queen->SetPos(king->queenPos);
+	collisionManager->checkGrounded(player, platforms);
+
 	if (not m_stopwatch.isStarted())
 	{
 		m_stopwatch.start();
@@ -31,6 +47,9 @@ void Game::update()
 
 	std::sort(entities.begin(), entities.end(),
 	[](const auto& a, const auto& b) { return a->getY() < b->getY(); });
+	player->update(true);
+    //player->isGrounded = true;
+    //player->velocity.y = 0;
 
 }
 
@@ -40,7 +59,8 @@ void Game::draw() const
 
 	const Vec2 pos{ (Scene::Size().x / 2 + Periodic::Sine1_1(3s, t) * Scene::Size().y / 2), Scene::Size().y / 2 };
 
-	for (auto& e : entities) { e->update(scrolling); e->draw(); }
+	for (auto& e : entities) { //e->update(scrolling); 
+	e->draw(); }
 
 }
 

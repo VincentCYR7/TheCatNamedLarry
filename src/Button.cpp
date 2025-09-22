@@ -16,7 +16,7 @@ void Button::draw() {
 
 	roundRect
 		.drawShadow(Vec2{ 2, 2 }, 12, 0)
-		.draw((hover ? ColorF{ 0.5, 0.9, 0.9 } : ColorF{ 0.9, 0.9, 0.9 }));
+		.draw((hover ? ColorF{ 0.9, 0.6, 0.1 } : ColorF{ 0.9, 0.9, 0.9 }));
 
 	// Draw border
 	rect.stretched(-3).rounded(3)

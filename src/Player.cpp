@@ -3,12 +3,15 @@ using namespace s3d;
 
 Player::Player(const Vec2& pos, const Texture& tex, const Size& si)
     : Entity(pos, tex, si)
-    , targetPos(pos) // start with current position
 {}
 
 
 
-void Player::update(bool scroll) {
+void Player::update(bool scroll) {\
+    if (isGrounded && KeySpace.down()) {
+        velocity.y = jumpStrength;
+        isGrounded = false;
+    }
 	if (!isGrounded)
 	{
 		velocity.y += gravity * Scene::DeltaTime();
@@ -26,13 +29,19 @@ void Player::update(bool scroll) {
         position.x += speed * Scene::DeltaTime();
 		facingLeft = false;
     }
-	if (KeySpace.down()) {
 
-	}
+
 }
 
 
 
 void Player::draw() {
     texture.scaled(0.2).mirrored(!facingLeft).drawAt(position);
+    getHitbox().drawFrame(2, 0, Palette::Red);
 }
+
+RectF Player::getHitbox() const {
+    return RectF{ Vec2{position.x - (size.x/2), position.y - (size.y/2)}, size};
+}
+
+
