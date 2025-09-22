@@ -2,10 +2,7 @@
 
 # include <Siv3D.hpp>
 # include "Entity.h"
-# include "King.h"
 # include "Player.h"
-# include "TrapManager.h"
-# include "Enemy.h"
 
 
 class Game : public SceneManager<String>::Scene
@@ -30,24 +27,10 @@ private:
 	Texture m_emoji;
 
 	Stopwatch m_stopwatch;
-	const Texture kingTexture{U"Assets/king.png" };
-	const Texture queenTexture{U"Assets/queen.png" };
-	const Texture knightTexture{U"Assets/knight.png"};
-	const Texture grassTexture{U"Assets/grass.png"};
-	const Texture enemyTexture{U"Assets/enemy.png"};
 	const Texture larryTexture{U"Assets/larry.png"};
 	const Vec2 test{400,300};
 	std::vector<std::unique_ptr<Entity>> entities;
 
-	KingMoveManager* king;
-
 	Player* player;
-	
-	Entity* queen;
 
-	TrapManager trapManager;
-
-	std::vector<Enemy*> enemyArray;
-
-	std::vector<Entity*> grassArray;
 };

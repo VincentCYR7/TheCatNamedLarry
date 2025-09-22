@@ -1,7 +1,5 @@
 # include "Win.h"
 
-
-
 Win::Win(const InitData& init)
 		: IScene{ init }
 {
@@ -18,8 +16,6 @@ void Win::update()
 {
 	// On left click
 	titleButton->update();
-
-	
 
 	if (titleButton->clicked())
 	{

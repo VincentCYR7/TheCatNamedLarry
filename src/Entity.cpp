@@ -1,8 +1,8 @@
 #include "Entity.h"
 using namespace s3d;
 
-Entity::Entity(const Vec2& pos, const Texture& tex)
-    : position(pos), texture(tex) {}
+Entity::Entity(const Vec2& pos, const Texture& tex, const Size& si)
+    : position(pos), texture(tex), size(si) {}
 
 Entity::~Entity() = default;
 
@@ -10,6 +10,11 @@ void Entity::update(bool scroll) {
 	if (scroll) {
 		updateScroll();
 	}
+	if (!isGrounded)
+{
+    velocity.y += gravity * Scene::DeltaTime();
+    position += velocity * Scene::DeltaTime();
+}
 }
 
 void Entity::updateScroll()  {
