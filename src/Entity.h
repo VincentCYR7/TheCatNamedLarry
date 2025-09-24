@@ -8,7 +8,7 @@ protected:
 	Size size;
 	
 	
-	const double gravity = 980.0; 
+	const double gravity = 9.8; 
 
 public:
 	Circle collider{ 400, 300, 70 };
@@ -30,4 +30,7 @@ public:
 	bool isGrounded = false;
 
 	Vec2 velocity = Vec2{ 0, 0 };
+
+	RectF prevHitbox;
+	float ignoreGroundUntil = 0.0;
 };

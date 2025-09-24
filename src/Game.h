@@ -39,4 +39,7 @@ private:
 	Player* player;
 	CollisionManager* collisionManager;
 
+	double accumulator = 0.0;
+	const double h = 1.0/120.0;
+
 };

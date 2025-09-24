@@ -7,14 +7,17 @@ Player::Player(const Vec2& pos, const Texture& tex, const Size& si)
 
 
 
-void Player::update(bool scroll) {\
-    if (isGrounded && KeySpace.down()) {
+void Player::update(bool scroll) {
+    prevHitbox = getHitbox();
+
+    if (isGrounded && KeySpace.pressed()) {
+        ignoreGroundUntil = Scene::Time() + 0.5;
         velocity.y = jumpStrength;
         isGrounded = false;
     }
 	if (!isGrounded)
 	{
-		velocity.y += gravity * Scene::DeltaTime();
+		velocity.y += gravity;
 		position += velocity * Scene::DeltaTime();
 	}
 
@@ -37,7 +40,7 @@ void Player::update(bool scroll) {\
 
 void Player::draw() {
     texture.scaled(0.2).mirrored(!facingLeft).drawAt(position);
-    getHitbox().drawFrame(2, 0, Palette::Red);
+    //getHitbox().drawFrame(2, 0, Palette::Red);
 }
 
 RectF Player::getHitbox() const {

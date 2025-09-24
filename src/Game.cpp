@@ -15,6 +15,8 @@ Game::Game(const InitData& init)
 	collisionManager = new CollisionManager();
 
 
+
+
 	for (int i = 0; i < 5; ++i) {
     	Vec2 pos{ 100 + i * 100, 500 }; 
     	// Create a GamePlatform and immediately upcast to unique_ptr<Entity>
@@ -38,7 +40,16 @@ Game::~Game()
 
 void Game::update()
 {
-	collisionManager->checkGrounded(player, platforms);
+
+	accumulator += Scene::DeltaTime();
+
+	while (accumulator >= h) {
+		//collisionManager->checkGrounded(player, platforms);
+		collisionManager->resolveGrounding(player, platforms);
+		accumulator -= h;
+		player->update(true);
+		
+	}
 
 	if (not m_stopwatch.isStarted())
 	{
@@ -47,7 +58,7 @@ void Game::update()
 
 	std::sort(entities.begin(), entities.end(),
 	[](const auto& a, const auto& b) { return a->getY() < b->getY(); });
-	player->update(true);
+	
     //player->isGrounded = true;
     //player->velocity.y = 0;
 

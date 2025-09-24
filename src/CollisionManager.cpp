@@ -1,6 +1,15 @@
 #include "CollisionManager.h"
+#include "Entity.h"
+#include "GamePlatform.h"
 
-void CollisionManager::checkCollisions(Array<Entity*>& entities) {
+// Tunables for feel
+namespace {
+    constexpr double kSkin  = 2.0;   // allowed penetration below top (px)
+    constexpr double kSnap  = 3.0;   // snap distance when hovering just above (px)
+    constexpr double kMinFallSpeedForSnap = 20.0; // px/s
+}
+
+void CollisionManager::checkCollisions(s3d::Array<Entity*>& entities) {
     for (size_t i = 0; i < entities.size(); ++i) {
         for (size_t j = i + 1; j < entities.size(); ++j) {
             Entity* a = entities[i];
@@ -14,38 +23,65 @@ void CollisionManager::checkCollisions(Array<Entity*>& entities) {
 }
 
 void CollisionManager::handleCollision(Entity* a, Entity* b) {
-    // Placeholder: customize based on entity types
-    // Example: push player out of wall, trigger damage, etc.
-    // You can use dynamic_cast or tags to specialize behavior
+    // TODO: specialize by type if needed
+    // Example: walls, enemies, pickups...
 }
 
-void CollisionManager::checkGrounded(Entity* player, const std::vector<GamePlatform*>& platforms) {
-    constexpr double groundTolerance = 2.0; // Adjustable vertical margin
+void CollisionManager::resolveGrounding(Entity* player, const std::vector<GamePlatform*>& platforms) {
+    if (Time::GetSec() < player->ignoreGroundUntil) return;
     player->isGrounded = false;
 
-    const RectF playerBox = player->getHitbox();
-    const double playerBottomY = playerBox.y + playerBox.h;
+    const s3d::RectF boxNow  = player->getHitbox();
+    const s3d::RectF boxPrev = player->prevHitbox;  
+    const double halfH       = boxNow.h * 0.5;
 
-    for (const auto& platform : platforms) {
-        const RectF platformBox = platform->getHitbox();
-        const double platformTopY = platformBox.y;
+    const double bottomNow   = boxNow.y + boxNow.h;
+    const double bottomPrev  = boxPrev.y + boxPrev.h;
+    const bool   falling     = (player->velocity.y > kMinFallSpeedForSnap);
 
-        // Check horizontal overlap
-        const bool horizontalOverlap =
-            playerBox.x + playerBox.w > platformBox.x &&
-            playerBox.x < platformBox.x + platformBox.w;
+    struct Candidate {
+        const GamePlatform* plat = nullptr;
+        double topY = 0.0;
+        double gap  = 0.0; 
+    };
+    std::optional<Candidate> best;
 
-        // Check vertical proximity (player just above platform)
-        const bool verticalTouch =
-            Abs(playerBottomY - platformTopY) <= groundTolerance;
+    for (const auto* platform : platforms) {
+        const s3d::RectF p = platform->getHitbox();
+        const double top   = p.y;
 
-        if (horizontalOverlap && verticalTouch) {
-            player->isGrounded = true;
-            //player->velocity.y = 0;
-            break;
+        // Horizontal overlap check
+        const bool overlapX =
+            (boxNow.x + boxNow.w > p.x) &&
+            (boxNow.x < p.x + p.w);
+
+        if (!overlapX) continue;
+
+        const double gap = top - bottomNow;
+        const double pen = -gap;
+
+        // A) within skin from above
+        const bool withinSkinFromAbove =
+            (pen >= 0.0) && (pen <= kSkin) && (bottomPrev <= top + kSkin);
+
+        // B) snap when just above and falling
+        const bool snapFromAbove =
+            falling && (gap > 0.0) && (gap <= kSnap) && (bottomPrev <= top + kSnap);
+
+        if (withinSkinFromAbove || snapFromAbove) {
+            if (!best || std::abs(gap) < std::abs(best->gap)) {
+                best = Candidate{ platform, top, gap };
+            }
         }
-        //player->isGrounded = true;
-        //player->velocity.y = 0;
+    }
 
+    if (best) {
+        // Clamp to surface: entity pos is CENTER
+        const double centerX = player->GetPos().x;
+        const double centerY = best->topY - halfH;
+
+        player->SetPos({ centerX, centerY });
+        player->velocity.y = 0.0;
+        player->isGrounded = true;
     }
 }

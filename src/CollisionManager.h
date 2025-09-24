@@ -1,17 +1,19 @@
 #pragma once
 #include <Siv3D.hpp>
-#include "Entity.h"
-#include "Player.h"
-#include "GamePlatform.h"
+#include <vector>
+
+// Forward declares
+class Entity;
+class GamePlatform;
 
 class CollisionManager {
 public:
-    // Checks collisions between all entities
-    void checkCollisions(Array<Entity*>& entities);
+    // General collision check between arbitrary entities
+    void checkCollisions(s3d::Array<Entity*>& entities);
 
-    // Checks if the player is grounded on any platform
-    void checkGrounded(Entity* player, const std::vector<GamePlatform*>& platforms);
-
-private:
+    // Handle generic collisions (extend with dynamic_cast or tags)
     void handleCollision(Entity* a, Entity* b);
+
+    // Resolve player grounding against platforms
+    void resolveGrounding(Entity* player, const std::vector<GamePlatform*>& platforms);
 };

@@ -13,14 +13,15 @@ public:
 	Rect hitbox;
 	bool isAttacking = false;
     RectF getHitbox() const override;
-
+    RectF prevHitbox;
 
 
 private:
 
     double speed = 280.0;
-    double jumpStrength = -500.0;
+    double jumpStrength = -800.0;
 	double attackCoolDown = 0.1;
+
 
     s3d::Vec2 targetPos;        // destination
     bool facingLeft = false;

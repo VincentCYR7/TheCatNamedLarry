@@ -11,7 +11,7 @@ void GamePlatform::update(bool scroll) {
 
 void GamePlatform::draw() {
     texture.resized(size).draw(position);
-    getHitbox().drawFrame(2, 0, Palette::Red);
+    //getHitbox().drawFrame(2, 0, Palette::Red);
 }
 
 RectF GamePlatform::getHitbox() const {
