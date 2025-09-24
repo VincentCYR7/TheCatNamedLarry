@@ -7,7 +7,7 @@ public:
     Player(const s3d::Vec2& pos, const s3d::Texture& tex, const Size& si);
 	~Player() {};
 
-    void update(bool scroll) override;
+    void update() override;
     void draw() override;
 	
 	Rect hitbox;
@@ -26,8 +26,6 @@ private:
     s3d::Vec2 targetPos;        // destination
     bool facingLeft = false;
     double atkAnimInterval = 0;
-	
-
 	
 
 

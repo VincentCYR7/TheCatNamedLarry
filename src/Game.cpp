@@ -8,7 +8,7 @@ Game::Game(const InitData& init)
 	Scene::SetBackground(ColorF{ 0.7, 0.7, 0.7 });
 
 
-	player = new Player(Vec2{ 400,300 }, larryTexture, Size(50,50));
+	player = new Player(Vec2{ 400,300 }, larryTexture, Size(77,77));
 
 	entities.push_back(std::unique_ptr<Player>(player));
 	
@@ -18,8 +18,8 @@ Game::Game(const InitData& init)
 
 
 	for (int i = 0; i < 5; ++i) {
+
     	Vec2 pos{ 100 + i * 100, 500 }; 
-    	// Create a GamePlatform and immediately upcast to unique_ptr<Entity>
     	std::unique_ptr<Entity> entityPtr = std::make_unique<GamePlatform>(pos, platformTex, Size{100, 100});
 
     	// Push into entities
@@ -47,7 +47,7 @@ void Game::update()
 		//collisionManager->checkGrounded(player, platforms);
 		collisionManager->resolveGrounding(player, platforms);
 		accumulator -= h;
-		player->update(true);
+		player->update();
 		
 	}
 
@@ -59,8 +59,6 @@ void Game::update()
 	std::sort(entities.begin(), entities.end(),
 	[](const auto& a, const auto& b) { return a->getY() < b->getY(); });
 	
-    //player->isGrounded = true;
-    //player->velocity.y = 0;
 
 }
 
@@ -71,7 +69,8 @@ void Game::draw() const
 	const Vec2 pos{ (Scene::Size().x / 2 + Periodic::Sine1_1(3s, t) * Scene::Size().y / 2), Scene::Size().y / 2 };
 
 	for (auto& e : entities) { //e->update(scrolling); 
-	e->draw(); }
+		e->draw(); 
+	}
 
 }
 

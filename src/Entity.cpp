@@ -6,15 +6,12 @@ Entity::Entity(const Vec2& pos, const Texture& tex, const Size& si)
 
 Entity::~Entity() = default;
 
-void Entity::update(bool scroll) {
-	if (scroll) {
-		updateScroll();
-	}
+void Entity::update() {
 	if (!isGrounded)
-{
-    velocity.y += gravity * Scene::DeltaTime();
-    position += velocity * Scene::DeltaTime();
-}
+	{
+    	velocity.y += gravity * Scene::DeltaTime();
+    	position += velocity * Scene::DeltaTime();
+	}
 }
 
 void Entity::updateScroll()  {

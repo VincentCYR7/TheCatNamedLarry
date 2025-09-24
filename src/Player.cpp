@@ -7,7 +7,7 @@ Player::Player(const Vec2& pos, const Texture& tex, const Size& si)
 
 
 
-void Player::update(bool scroll) {
+void Player::update() {
     prevHitbox = getHitbox();
 
     if (isGrounded && KeySpace.pressed()) {
@@ -39,7 +39,7 @@ void Player::update(bool scroll) {
 
 
 void Player::draw() {
-    texture.scaled(0.2).mirrored(!facingLeft).drawAt(position);
+    texture.scaled(0.31).mirrored(!facingLeft).drawAt(position);
     //getHitbox().drawFrame(2, 0, Palette::Red);
 }
 
