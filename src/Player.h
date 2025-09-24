@@ -27,6 +27,4 @@ private:
     bool facingLeft = false;
     double atkAnimInterval = 0;
 	
-
-
 };

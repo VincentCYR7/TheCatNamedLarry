@@ -18,18 +18,18 @@ void Player::update() {
 	if (!isGrounded)
 	{
 		velocity.y += gravity;
-		position += velocity * Scene::DeltaTime();
+		position += velocity * 0.005;
 	}
 
     if (KeyA.pressed())
     {
-        position.x -= speed * Scene::DeltaTime();
+        position.x -= speed * 0.005;
 		facingLeft = true;
 ;
     }
     if (KeyD.pressed())
     {
-        position.x += speed * Scene::DeltaTime();
+        position.x += speed * 0.005;
 		facingLeft = false;
     }
 

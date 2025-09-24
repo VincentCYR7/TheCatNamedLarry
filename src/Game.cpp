@@ -22,7 +22,6 @@ Game::Game(const InitData& init)
     	Vec2 pos{ 100 + i * 100, 500 }; 
     	std::unique_ptr<Entity> entityPtr = std::make_unique<GamePlatform>(pos, platformTex, Size{100, 100});
 
-    	// Push into entities
     	entities.push_back(std::move(entityPtr));
 
 		platforms.push_back(static_cast<GamePlatform*>(entities.back().get()));
@@ -66,6 +65,9 @@ void Game::draw() const
 {
 	const double t = m_stopwatch.sF();
 
+	nightSky.scaled(0.35).drawAt(Vec2{Scene::Size().x / 2, Scene::Size().y / 2});
+	buildings.scaled(0.35).drawAt(Vec2{Scene::Size().x / 2, Scene::Size().y / 2});
+ 
 	const Vec2 pos{ (Scene::Size().x / 2 + Periodic::Sine1_1(3s, t) * Scene::Size().y / 2), Scene::Size().y / 2 };
 
 	for (auto& e : entities) { //e->update(scrolling); 

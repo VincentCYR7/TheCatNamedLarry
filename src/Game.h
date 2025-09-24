@@ -31,6 +31,8 @@ private:
 	Stopwatch m_stopwatch;
 	const Texture larryTexture{U"Assets/larry.png"};
 	const Texture platformTex{ U"Assets/rooftop.png" };
+	const Texture nightSky{U"Assets/nightSky.png"};
+	const Texture buildings{U"Assets/buildings.png"};
 	const Vec2 test{400,300};
 	std::vector<std::unique_ptr<Entity>> entities;
 	std::vector<GamePlatform*> platforms;
