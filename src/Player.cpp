@@ -21,13 +21,13 @@ void Player::update() {
 		position += velocity * 0.005;
 	}
 
-    if (KeyA.pressed())
+    if (KeyLeft.pressed())
     {
         position.x -= speed * 0.005;
 		facingLeft = true;
 ;
     }
-    if (KeyD.pressed())
+    if (KeyRight.pressed())
     {
         position.x += speed * 0.005;
 		facingLeft = false;
