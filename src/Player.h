@@ -25,7 +25,6 @@ private:
 
     s3d::Vec2 targetPos;        // destination
     bool facingLeft = false;
-    double atkAnimInterval = 0;
 
     
 	const Texture larryRun1Texture{U"Assets/Larry/LarryRun1.png"};
@@ -38,6 +37,12 @@ private:
     const Texture larryIdle5Texture{U"Assets/Larry/LarryIdle5.png"};
     const Texture larryIdle6Texture{U"Assets/Larry/LarryIdle6.png"};
     const Texture larryIdle7Texture{U"Assets/Larry/LarryIdle7.png"};
+
+	bool isMoving = false;
+	int curSpriteMoving = 0;
+	int curSpriteIdle = 0;
+	double animInterval = 0.3;
+	float animTimer = 0;
     //const Texture larryIdle8Texture{U"Assets/Larry/LarryIdle8.png"};
 	
 };
