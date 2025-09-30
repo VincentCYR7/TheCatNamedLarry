@@ -64,7 +64,7 @@ void Player::update() {
 			curSpriteIdle = 0;
 		}
 	}
-
+ 
 }
 
 
@@ -119,7 +119,13 @@ void Player::draw() {
 }
 
 RectF Player::getHitbox() const {
-    return RectF{ Vec2{position.x - (size.x/2), position.y - (size.y/2)}, size};
+    float centerCorrection;
+    if (facingLeft) {
+        centerCorrection = -20.0f;
+    } else {
+        centerCorrection = 20.0f;
+    }
+    return RectF{ Vec2{position.x - (size.x/2) + centerCorrection, position.y - (size.y/2)}, size};
 }
 
 
