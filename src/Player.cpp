@@ -35,7 +35,7 @@ void Player::update() {
     }
 
 
-	animTimer += Scene::DeltaTime();
+	animTimer += 0.02;
 
 	while (animTimer >= animInterval) {
 		animTimer -= animInterval;
@@ -71,7 +71,7 @@ void Player::update() {
 
 void Player::draw() {
     //texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-    //getHitbox().drawFrame(2, 0, Palette::Red);
+    getHitbox().drawFrame(2, 0, Palette::Red);
 	if (isMoving) {
 		switch (curSpriteMoving) {
 			case 0:
