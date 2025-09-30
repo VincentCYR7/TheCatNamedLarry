@@ -17,7 +17,7 @@ Game::Game(const InitData& init)
 
 
 
-	for (int i = 0; i < 5; ++i) {
+	for (int i = 0; i < 10; ++i) {
 
     	Vec2 pos{ 100 + i * 100, 500 }; 
     	std::unique_ptr<Entity> entityPtr = std::make_unique<GamePlatform>(pos, platformTex, Size{100, 100});
@@ -58,7 +58,12 @@ void Game::update()
 	std::sort(entities.begin(), entities.end(),
 	[](const auto& a, const auto& b) { return a->getY() < b->getY(); });
 	
-
+	platforms.clear();
+	platforms.reserve(entities.size());
+	for (auto& e : entities) {
+		if (auto* p = dynamic_cast<GamePlatform*>(e.get()))
+			platforms.push_back(p); // non-owning
+	}
 }
 
 void Game::draw() const
