@@ -26,5 +26,18 @@ private:
     s3d::Vec2 targetPos;        // destination
     bool facingLeft = false;
     double atkAnimInterval = 0;
+
+    
+	const Texture larryRun1Texture{U"Assets/Larry/LarryRun1.png"};
+    const Texture larryRun2Texture{U"Assets/Larry/LarryRun2.png"};
+    const Texture larryRun3Texture{U"Assets/Larry/LarryRun3.png"};
+    const Texture larryIdle1Texture{U"Assets/Larry/LarryIdle1.png"};
+    const Texture larryIdle2Texture{U"Assets/Larry/LarryIdle2.png"};
+    const Texture larryIdle3Texture{U"Assets/Larry/LarryIdle3.png"};
+    const Texture larryIdle4Texture{U"Assets/Larry/LarryIdle4.png"};
+    const Texture larryIdle5Texture{U"Assets/Larry/LarryIdle5.png"};
+    const Texture larryIdle6Texture{U"Assets/Larry/LarryIdle6.png"};
+    const Texture larryIdle7Texture{U"Assets/Larry/LarryIdle7.png"};
+    //const Texture larryIdle8Texture{U"Assets/Larry/LarryIdle8.png"};
 	
 };

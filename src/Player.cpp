@@ -39,7 +39,7 @@ void Player::update() {
 
 
 void Player::draw() {
-    texture.scaled(0.31).mirrored(!facingLeft).drawAt(position);
+    texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
     //getHitbox().drawFrame(2, 0, Palette::Red);
 }
 

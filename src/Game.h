@@ -29,7 +29,7 @@ private:
 	Texture m_emoji;
 
 	Stopwatch m_stopwatch;
-	const Texture larryTexture{U"Assets/larry.png"};
+	const Texture larryTexture{U"Assets/Larry/Larry0.png"};
 	const Texture platformTex{ U"Assets/rooftop.png" };
 	const Texture nightSky{U"Assets/nightSky.png"};
 	const Texture buildings{U"Assets/buildings.png"};
