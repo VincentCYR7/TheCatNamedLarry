@@ -32,7 +32,7 @@ void Player::updateInput() {
     }
 
     // Jump: allow if grounded OR within coyote window
-    if ((isGrounded || now <= coyoteUntil) && (KeySpace.down() || KeyUp.down())) {
+    if ((isGrounded || now <= coyoteUntil) && (KeySpace.pressed() || KeyUp.pressed())) {
         velocity.y = jumpStrength;   // your jumpStrength is negative in your setup
         isGrounded = false;
         coyoteUntil = 0.0;           // consume the window so it doesn't re-trigger
@@ -62,45 +62,45 @@ void Player::updateInput() {
 void Player::updateAnim(){
 	animTimer += 0.02;
 
-while (animTimer >= animInterval) {
-    animTimer -= animInterval;
+    while (animTimer >= animInterval) {
+        animTimer -= animInterval;
 
-    const bool airborne = !isGrounded;
+        const bool airborne = !isGrounded;
 
-    if (airborne) {
-        // Airborne frames: force a specific pose
-        curSpriteMoving = isMoving ? 3 : 0;
-    } else {
-        if (isMoving) {
-            // Grounded + moving: advance [0..3]
-            curSpriteMoving = (curSpriteMoving + 1) % 4;
+        if (airborne) {
+            // Airborne frames: force a specific pose
+            curSpriteMoving = isMoving ? 3 : 0;
         } else {
-            // Grounded + idle
-            if (!isBlinking) {
-                // Normal idle cycle [0..4]
-                curSpriteIdle++;
-                if (curSpriteIdle > 4) curSpriteIdle = 0;
+            if (isMoving) {
+                // Grounded + moving: advance [0..3]
+                curSpriteMoving = (curSpriteMoving + 1) % 4;
             } else {
-                // Blinking sequence: 1 -> 5,6,7 -> 0 (then stop blinking)
-                if (curSpriteIdle < 1) {
-                    curSpriteIdle = 1;              // snap to blink start if needed
-                } else if (curSpriteIdle == 1) {
-                    curSpriteIdle = 5;              // jump into blink frames
-                } else if (curSpriteIdle >= 7) {
-                    curSpriteIdle = 0;
-                    isBlinking = false;
+                // Grounded + idle
+                if (!isBlinking) {
+                    // Normal idle cycle [0..4]
+                    curSpriteIdle++;
+                    if (curSpriteIdle > 4) curSpriteIdle = 0;
                 } else {
-                    ++curSpriteIdle;                // 5 -> 6 -> 7
+                    // Blinking sequence: 1 -> 5,6,7 -> 0 (then stop blinking)
+                    if (curSpriteIdle < 1) {
+                        curSpriteIdle = 1;              // snap to blink start if needed
+                    } else if (curSpriteIdle == 1) {
+                        curSpriteIdle = 5;              // jump into blink frames
+                    } else if (curSpriteIdle >= 7) {
+                        curSpriteIdle = 0;
+                        isBlinking = false;
+                    } else {
+                        ++curSpriteIdle;                // 5 -> 6 -> 7
+                    }
                 }
             }
         }
-    }
 
-    // Blink trigger: only when grounded, idle, at frame 1
-    if (!airborne && !isMoving && curSpriteIdle == 1) {
-        isBlinking = (Random(0, 6) == 3);
+        // Blink trigger: only when grounded, idle, at frame 1
+        if (!airborne && !isMoving && curSpriteIdle == 1) {
+            isBlinking = (Random(0, 6) == 3);
+        }
     }
-}
 
 }
 
