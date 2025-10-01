@@ -7,6 +7,7 @@ namespace {
     constexpr double kSkin  = 2.0;   // allowed penetration below top (px)
     constexpr double kSnap  = 3.0;   // snap distance when hovering just above (px)
     constexpr double kMinFallSpeedForSnap = 20.0; // px/s
+	 constexpr double kHover = 0.5;
 }
 
 void CollisionManager::checkCollisions(std::vector<std::unique_ptr<Entity>>& entities) {
@@ -23,26 +24,31 @@ void CollisionManager::checkCollisions(std::vector<std::unique_ptr<Entity>>& ent
 }
 
 void CollisionManager::handleCollision(Entity* a, Entity* b) {
-    // TODO: specialize by type if needed
-    // Example: walls, enemies, pickups...
+	ClearPrint();
+    Print << U"collided";
+
+	
 }
 
+
 void CollisionManager::resolveGrounding(Entity* player, const std::vector<GamePlatform*>& platforms) {
-	if (player->velocity.y < 0) return;
+    if (player->velocity.y < 0) return;
     player->isGrounded = false;
 
     const s3d::RectF boxNow  = player->getHitbox();
-    const s3d::RectF boxPrev = player->prevHitbox;  
+    const s3d::RectF boxPrev = player->prevHitbox;
     const double halfH       = boxNow.h * 0.5;
 
-    const double bottomNow   = boxNow.y + boxNow.h;
-    const double bottomPrev  = boxPrev.y + boxPrev.h;
-    const bool   falling     = (player->velocity.y > kMinFallSpeedForSnap);
+    // Effective bottoms used for tests so we still "count" as grounded while hovering
+    const double bottomNowEff  = (boxNow.y + boxNow.h)  + kHover;
+    const double bottomPrevEff = (boxPrev.y + boxPrev.h) + kHover; 
+
+    const bool falling = (player->velocity.y > kMinFallSpeedForSnap);
 
     struct Candidate {
         const GamePlatform* plat = nullptr;
         double topY = 0.0;
-        double gap  = 0.0; 
+        double gap  = 0.0;
     };
     std::optional<Candidate> best;
 
@@ -57,16 +63,17 @@ void CollisionManager::resolveGrounding(Entity* player, const std::vector<GamePl
 
         if (!overlapX) continue;
 
-        const double gap = top - bottomNow;
+        // Compute gap/penetration with the effective bottom (includes hover)
+        const double gap = top - bottomNowEff; 
         const double pen = -gap;
 
-        // A) within skin from above
+        // A) within skin from above (using effective bottom)
         const bool withinSkinFromAbove =
-            (pen >= 0.0) && (pen <= kSkin) && (bottomPrev <= top + kSkin);
+            (pen >= 0.0) && (pen <= kSkin) && (bottomPrevEff <= top + kSkin); 
 
-        // B) snap when just above and falling
+        // B) snap when just above and falling (using effective bottom)
         const bool snapFromAbove =
-            falling && (gap > 0.0) && (gap <= kSnap) && (bottomPrev <= top + kSnap);
+            falling && (gap > 0.0) && (gap <= kSnap) && (bottomPrevEff <= top + kSnap);
 
         if (withinSkinFromAbove || snapFromAbove) {
             if (!best || std::abs(gap) < std::abs(best->gap)) {
@@ -76,9 +83,9 @@ void CollisionManager::resolveGrounding(Entity* player, const std::vector<GamePl
     }
 
     if (best) {
-        // Clamp to surface: entity pos is CENTER
+        // Place CENTER so that the bottom is kHover above the platform
         const double centerX = player->GetPos().x;
-        const double centerY = best->topY - halfH;
+        const double centerY = best->topY - halfH - kHover;  // <- CHANGED: hover above
 
         player->SetPos({ centerX, centerY });
         player->velocity.y = 0.0;

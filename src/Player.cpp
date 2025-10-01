@@ -42,6 +42,9 @@ void Player::updateInput() {
 		facingLeft = false;
 		isMoving = true;
     }
+	if (KeyQ.pressed()) {
+		ClearPrint();
+	}
 }
 
 void Player::updateAnim(){
@@ -91,67 +94,72 @@ while (animTimer >= animInterval) {
 
 void Player::draw() {
     //texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-    getHitbox().drawFrame(2, 0, Palette::Red);
-	if (isMoving) {
-		switch (curSpriteMoving) {
-			case 0:
-				texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-				break;
-			case 1:
-				larryRun1Texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-				break;
-			case 2:
-				larryRun2Texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-				break;
-			case 3:
-				larryRun3Texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-				break;
-			default:
-				texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-				break;
-    	}	
-	} else {
-		switch (curSpriteIdle) {
-			case 0:
-				texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-				break;
-			case 1:
-				larryIdle1Texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-				break;
-			case 2:
-				larryIdle2Texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-				break;
-			case 3:
-				larryIdle3Texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-				break;
-			case 4:
-				larryIdle4Texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-				break;
-			case 5:
-				larryIdle5Texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-				break;
-			case 6:
-				larryIdle6Texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-				break;
-			case 7:
-				larryIdle7Texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-				break;
-			default:
-				texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-				break;
-    	}	
-	}
-
-}
-
-RectF Player::getHitbox() const {
-    float centerCorrection;
+	float centerCorrection;
     if (facingLeft) {
         centerCorrection = -20.0f;
     } else {
         centerCorrection = 20.0f;
     }
-    return RectF{ Vec2{position.x - (size.x/2) + centerCorrection, position.y - (size.y/2)}, size};
+	Vec2 drawPosition = Vec2{position.x - centerCorrection, position.y};
+
+	if (isMoving) {
+		switch (curSpriteMoving) {
+			case 0:
+				texture.scaled(0.5).mirrored(!facingLeft).drawAt(drawPosition);
+				break;
+			case 1:
+				larryRun1Texture.scaled(0.5).mirrored(!facingLeft).drawAt(drawPosition);
+				break;
+			case 2:
+				larryRun2Texture.scaled(0.5).mirrored(!facingLeft).drawAt(drawPosition);
+				break;
+			case 3:
+				larryRun3Texture.scaled(0.5).mirrored(!facingLeft).drawAt(drawPosition);
+				break;
+			default:
+				texture.scaled(0.5).mirrored(!facingLeft).drawAt(drawPosition);
+				break;
+    	}	
+	} else {
+		switch (curSpriteIdle) {
+			case 0:
+				texture.scaled(0.5).mirrored(!facingLeft).drawAt(drawPosition);
+				break;
+			case 1:
+				larryIdle1Texture.scaled(0.5).mirrored(!facingLeft).drawAt(drawPosition);
+				break;
+			case 2:
+				larryIdle2Texture.scaled(0.5).mirrored(!facingLeft).drawAt(drawPosition);
+				break;
+			case 3:
+				larryIdle3Texture.scaled(0.5).mirrored(!facingLeft).drawAt(drawPosition);
+				break;
+			case 4:
+				larryIdle4Texture.scaled(0.5).mirrored(!facingLeft).drawAt(drawPosition);
+				break;
+			case 5:
+				larryIdle5Texture.scaled(0.5).mirrored(!facingLeft).drawAt(drawPosition);
+				break;
+			case 6:
+				larryIdle6Texture.scaled(0.5).mirrored(!facingLeft).drawAt(drawPosition);
+				break;
+			case 7:
+				larryIdle7Texture.scaled(0.5).mirrored(!facingLeft).drawAt(drawPosition);
+				break;
+			default:
+				texture.scaled(0.5).mirrored(!facingLeft).drawAt(drawPosition);
+				break;
+    	}	
+	}
+
+
+	getHitbox().drawFrame(2, 0, Palette::Red);
+	//Circle(position.x, position.y, 2).draw();
+}
+
+RectF Player::getHitbox() const {
+
+    return RectF{ Vec2{position.x - (size.x/2), position.y - (size.y/2)}, size};
 }
 
 

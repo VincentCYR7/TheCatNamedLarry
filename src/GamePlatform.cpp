@@ -4,7 +4,7 @@ GamePlatform::GamePlatform(const Vec2& pos, const Texture& tex, const Size& si)
     : Entity(pos, tex, si) {}
 
 void GamePlatform::update() {
-
+	
 }
 
 void GamePlatform::draw() {    
