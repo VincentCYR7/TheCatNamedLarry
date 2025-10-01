@@ -32,5 +32,5 @@ public:
 	Vec2 velocity = Vec2{ 0, 0 };
 
 	RectF prevHitbox;
-	float ignoreGroundUntil = 0.0;
+
 };

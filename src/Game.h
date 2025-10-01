@@ -22,8 +22,6 @@ public:
 
 	void drawFadeOut(double t) const override;
 
-	bool scrolling;
-
 private:
 
 	Texture m_emoji;
@@ -36,7 +34,6 @@ private:
 	const Vec2 test{400,300};
 	std::vector<std::unique_ptr<Entity>> entities;
 	std::vector<GamePlatform*> platforms;
-
 
 	Player* player;
 	CollisionManager* collisionManager;

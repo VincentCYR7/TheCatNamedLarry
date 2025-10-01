@@ -9,7 +9,7 @@ class GamePlatform;
 class CollisionManager {
 public:
     // General collision check between arbitrary entities
-    void checkCollisions(s3d::Array<Entity*>& entities);
+    void checkCollisions(std::vector<std::unique_ptr<Entity>>& entities);
 
     // Handle generic collisions (extend with dynamic_cast or tags)
     void handleCollision(Entity* a, Entity* b);

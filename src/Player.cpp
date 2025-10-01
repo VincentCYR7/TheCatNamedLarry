@@ -6,12 +6,21 @@ Player::Player(const Vec2& pos, const Texture& tex, const Size& si)
 {}
 
 
-
 void Player::update() {
+	if (position.y > 1000) {
+		position = Vec2{200, 100};
+		velocity = Vec2{0, 0};
+	}
+
     prevHitbox = getHitbox();
 	isMoving = false;
-    if (isGrounded && KeySpace.pressed()) {
-        ignoreGroundUntil = Scene::Time() + 0.5;
+	updateInput();
+	updateAnim();
+ 
+}
+
+void Player::updateInput() {
+	if (isGrounded && (KeySpace.pressed() || KeyUp.pressed())) {
         velocity.y = jumpStrength;
         isGrounded = false;
     }
@@ -33,45 +42,56 @@ void Player::update() {
 		facingLeft = false;
 		isMoving = true;
     }
-
-
-	animTimer += 0.02;
-
-	while (animTimer >= animInterval) {
-		animTimer -= animInterval;
-		if (isMoving) {
-			curSpriteMoving++;
-		}
-		else {
-			curSpriteIdle++;
-		}
-		
-	}
-
-	if (isMoving && !isGrounded){
-		curSpriteMoving = 3;
-	}
-	else if (!isMoving && !isGrounded){
-		curSpriteMoving = 0;
-	}
-	else if (isMoving) {
-		if (curSpriteMoving > 3) {
-			curSpriteMoving = 0;
-		}
-	}
-	else if (isGrounded) {
-		if (curSpriteIdle > 4) {
-			curSpriteIdle = 0;
-		}
-	}
- 
 }
 
+void Player::updateAnim(){
+	animTimer += 0.02;
 
+while (animTimer >= animInterval) {
+    animTimer -= animInterval;
+
+    const bool airborne = !isGrounded;
+
+    if (airborne) {
+        // Airborne frames: force a specific pose
+        curSpriteMoving = isMoving ? 3 : 0;
+    } else {
+        if (isMoving) {
+            // Grounded + moving: advance [0..3]
+            curSpriteMoving = (curSpriteMoving + 1) % 4;
+        } else {
+            // Grounded + idle
+            if (!isBlinking) {
+                // Normal idle cycle [0..4]
+                curSpriteIdle++;
+                if (curSpriteIdle > 4) curSpriteIdle = 0;
+            } else {
+                // Blinking sequence: 1 -> 5,6,7 -> 0 (then stop blinking)
+                if (curSpriteIdle < 1) {
+                    curSpriteIdle = 1;              // snap to blink start if needed
+                } else if (curSpriteIdle == 1) {
+                    curSpriteIdle = 5;              // jump into blink frames
+                } else if (curSpriteIdle >= 7) {
+                    curSpriteIdle = 0;
+                    isBlinking = false;
+                } else {
+                    ++curSpriteIdle;                // 5 -> 6 -> 7
+                }
+            }
+        }
+    }
+
+    // Blink trigger: only when grounded, idle, at frame 1
+    if (!airborne && !isMoving && curSpriteIdle == 1) {
+        isBlinking = (Random(0, 6) == 3);
+    }
+}
+
+}
 
 void Player::draw() {
     //texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
-    //getHitbox().drawFrame(2, 0, Palette::Red);
+    getHitbox().drawFrame(2, 0, Palette::Red);
 	if (isMoving) {
 		switch (curSpriteMoving) {
 			case 0:
@@ -107,13 +127,19 @@ void Player::draw() {
 			case 4:
 				larryIdle4Texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
 				break;
+			case 5:
+				larryIdle5Texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
+				break;
+			case 6:
+				larryIdle6Texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
+				break;
+			case 7:
+				larryIdle7Texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
+				break;
 			default:
 				texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
 				break;
     	}	
-
-
-		//texture.scaled(0.5).mirrored(!facingLeft).drawAt(position);
 	}
 
 }

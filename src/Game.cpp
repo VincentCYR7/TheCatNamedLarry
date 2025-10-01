@@ -18,19 +18,20 @@ Game::Game(const InitData& init)
 
 
 	for (int i = 0; i < 10; ++i) {
-
-    	Vec2 pos{ 100 + i * 100, 500 }; 
-    	std::unique_ptr<Entity> entityPtr = std::make_unique<GamePlatform>(pos, platformTex, Size{100, 100});
+		Vec2 pos;
+		if(i > 4) {
+			pos = Vec2{ 100 + i * 100, 400 }; 
+		} else {
+			pos = Vec2{ 100 + i * 100, 500 }; 
+		}
+    	
+    	std::unique_ptr<Entity> entityPtr = std::make_unique<GamePlatform>(pos, platformTex, Size{98, 98});
 
     	entities.push_back(std::move(entityPtr));
 
 		platforms.push_back(static_cast<GamePlatform*>(entities.back().get()));
 
 	}
-
-
-	scrolling = false;
-
 }
 
 Game::~Game()
@@ -43,11 +44,10 @@ void Game::update()
 	accumulator += Scene::DeltaTime();
 
 	while (accumulator >= h) {
-		//collisionManager->checkGrounded(player, platforms);
+		collisionManager->checkCollisions(entities);
 		collisionManager->resolveGrounding(player, platforms);
 		accumulator -= h;
 		player->update();
-		
 	}
 
 	if (not m_stopwatch.isStarted())
@@ -75,7 +75,7 @@ void Game::draw() const
  
 	const Vec2 pos{ (Scene::Size().x / 2 + Periodic::Sine1_1(3s, t) * Scene::Size().y / 2), Scene::Size().y / 2 };
 
-	for (auto& e : entities) { //e->update(scrolling); 
+	for (auto& e : entities) {
 		e->draw(); 
 	}
 

@@ -9,11 +9,11 @@ namespace {
     constexpr double kMinFallSpeedForSnap = 20.0; // px/s
 }
 
-void CollisionManager::checkCollisions(s3d::Array<Entity*>& entities) {
+void CollisionManager::checkCollisions(std::vector<std::unique_ptr<Entity>>& entities) {
     for (size_t i = 0; i < entities.size(); ++i) {
         for (size_t j = i + 1; j < entities.size(); ++j) {
-            Entity* a = entities[i];
-            Entity* b = entities[j];
+            Entity* a = entities[i].get();  // .get() gives raw pointer
+            Entity* b = entities[j].get();
 
             if (a->getHitbox().intersects(b->getHitbox())) {
                 handleCollision(a, b);
@@ -28,7 +28,7 @@ void CollisionManager::handleCollision(Entity* a, Entity* b) {
 }
 
 void CollisionManager::resolveGrounding(Entity* player, const std::vector<GamePlatform*>& platforms) {
-    if (Time::GetSec() < player->ignoreGroundUntil) return;
+	if (player->velocity.y < 0) return;
     player->isGrounded = false;
 
     const s3d::RectF boxNow  = player->getHitbox();

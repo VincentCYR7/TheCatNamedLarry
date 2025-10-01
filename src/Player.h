@@ -9,6 +9,8 @@ public:
 
     void update() override;
     void draw() override;
+	void updateInput();
+	void updateAnim();
 	
 	Rect hitbox;
 	bool isAttacking = false;
@@ -39,6 +41,7 @@ private:
     const Texture larryIdle7Texture{U"Assets/Larry/LarryIdle7.png"};
 
 	bool isMoving = false;
+	bool isBlinking = false;
 	int curSpriteMoving = 0;
 	int curSpriteIdle = 0;
 	double animInterval = 0.3;
