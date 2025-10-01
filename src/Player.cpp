@@ -5,47 +5,59 @@ Player::Player(const Vec2& pos, const Texture& tex, const Size& si)
     : Entity(pos, tex, si)
 {}
 
+namespace {
+    constexpr double kFixedDt     = 0.005; // matches your integration step
+    constexpr double kCoyoteTime  = 0.12;  // ~120 ms grace window
+}
 
 void Player::update() {
-	if (position.y > 1000) {
-		position = Vec2{200, 100};
-		velocity = Vec2{0, 0};
-	}
+    now += kFixedDt;  // advance time for coyote logic
+
+    if (position.y > 1000) {
+        position = Vec2{200, 100};
+        velocity = Vec2{0, 0};
+    }
 
     prevHitbox = getHitbox();
-	isMoving = false;
-	updateInput();
-	updateAnim();
- 
+    isMoving = false;
+    updateInput();
+    updateAnim();
 }
+
 
 void Player::updateInput() {
-	if (isGrounded && (KeySpace.pressed() || KeyUp.pressed())) {
-        velocity.y = jumpStrength;
-        isGrounded = false;
+    // Refresh coyote window while grounded
+    if (isGrounded) {
+        coyoteUntil = now + kCoyoteTime;
     }
-	if (!isGrounded)
-	{
-		velocity.y += gravity;
-		position += velocity * 0.005;
-	}
 
-    if (KeyLeft.pressed())
-    {
-        position.x -= speed * 0.005;
-		facingLeft = true;
-		isMoving = true;
+    // Jump: allow if grounded OR within coyote window
+    if ((isGrounded || now <= coyoteUntil) && (KeySpace.down() || KeyUp.down())) {
+        velocity.y = jumpStrength;   // your jumpStrength is negative in your setup
+        isGrounded = false;
+        coyoteUntil = 0.0;           // consume the window so it doesn't re-trigger
     }
-    if (KeyRight.pressed())
-    {
-        position.x += speed * 0.005;
-		facingLeft = false;
-		isMoving = true;
+
+    if (!isGrounded) {
+        velocity.y += gravity;
+        position += velocity * kFixedDt;
     }
-	if (KeyQ.pressed()) {
-		ClearPrint();
-	}
+
+    if (KeyLeft.pressed()) {
+        position.x -= speed * kFixedDt;
+        facingLeft = true;
+        isMoving = true;
+    }
+    if (KeyRight.pressed()) {
+        position.x += speed * kFixedDt;
+        facingLeft = false;
+        isMoving = true;
+    }
+    if (KeyQ.pressed()) {
+        ClearPrint();
+    }
 }
+
 
 void Player::updateAnim(){
 	animTimer += 0.02;
@@ -153,7 +165,7 @@ void Player::draw() {
 	}
 
 
-	getHitbox().drawFrame(2, 0, Palette::Red);
+	//getHitbox().drawFrame(2, 0, Palette::Red);
 	//Circle(position.x, position.y, 2).draw();
 }
 

@@ -46,6 +46,8 @@ private:
 	int curSpriteIdle = 0;
 	double animInterval = 0.3;
 	float animTimer = 0;
-    //const Texture larryIdle8Texture{U"Assets/Larry/LarryIdle8.png"};
+	double now = 0.0;          // running time in seconds (or your fixed dt units)
+    double coyoteUntil = 0.0;  // time until which jump is allowed after leaving ground
+
 	
 };
