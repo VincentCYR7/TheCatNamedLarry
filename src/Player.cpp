@@ -70,6 +70,7 @@ void Player::updateAnim(){
         if (airborne) {
             // Airborne frames: force a specific pose
             curSpriteMoving = isMoving ? 3 : 0;
+            curSpriteIdle = 0;
         } else {
             if (isMoving) {
                 // Grounded + moving: advance [0..3]

@@ -22,6 +22,8 @@ public:
 
 	void drawFadeOut(double t) const override;
 
+	void updateCamera();
+
 private:
 
 	Texture m_emoji;
@@ -40,5 +42,14 @@ private:
 
 	double accumulator = 0.0;
 	const double h = 1.0/120.0;
+
+	s3d::Camera2D m_camera{ Vec2{0, 0}, 1.0, s3d::Camera2DParameters::NoControl() };
+	//s3d::RectF m_deadZone{ -200, -150, 400, 300 };
+	struct DeadZone {
+		double leftX = -200;
+		double rightX = 200;
+		double topY = -150;
+		double bottomY = 150;
+	} m_deadZone;
 
 };

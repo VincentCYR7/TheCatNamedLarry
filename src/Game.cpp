@@ -14,6 +14,11 @@ Game::Game(const InitData& init)
 	
 	collisionManager = new CollisionManager();
 
+	//Vec2 startCamPos = Vec2{player->getHitbox().center().x - 700, player->getHitbox().center().y - 500};
+	//m_camera.setCenter(startCamPos);
+	m_camera.setCenter(player->getHitbox().center());
+    m_camera.setScale(1.0);
+	//m_deadZone.setCenter(startCamPos);
 
 
 
@@ -48,22 +53,46 @@ void Game::update()
 		collisionManager->resolveGrounding(player, platforms);
 		accumulator -= h;
 		player->update();
+		updateCamera();
 	}
 
-	if (not m_stopwatch.isStarted())
-	{
-		m_stopwatch.start();
-	}
 
-	std::sort(entities.begin(), entities.end(),
-	[](const auto& a, const auto& b) { return a->getY() < b->getY(); });
+	//std::sort(entities.begin(), entities.end(),
+	//[](const auto& a, const auto& b) { return a->getY() < b->getY(); });
 	
 	platforms.clear();
 	platforms.reserve(entities.size());
 	for (auto& e : entities) {
 		if (auto* p = dynamic_cast<GamePlatform*>(e.get()))
-			platforms.push_back(p); // non-owning
+			platforms.push_back(p);
 	}
+
+	
+}
+
+void Game::updateCamera() {
+
+	const s3d::Vec2 camCenter = m_camera.getCenter();
+	const s3d::Vec2 playerCenter = player->getHitbox().center();
+
+	const s3d::Vec2 rel = playerCenter - camCenter;
+
+	s3d::Vec2 camMove{ 0, 0 };
+
+
+	if (rel.x < m_deadZone.leftX) camMove.x = rel.x - m_deadZone.leftX;
+	else if (rel.x > m_deadZone.rightX) camMove.x = rel.x - m_deadZone.rightX;
+
+	if (rel.y < m_deadZone.topY) camMove.y = rel.y - m_deadZone.topY;
+	else if (rel.y > m_deadZone.bottomY) camMove.y = rel.y - m_deadZone.bottomY;
+
+	if (camMove != s3d::Vec2{ 0, 0 }) {
+		s3d::Vec2 newCenter = camCenter + camMove;
+		newCenter.x = std::round(newCenter.x);
+		newCenter.y = std::round(newCenter.y);
+		m_camera.setCenter(newCenter);
+	}
+	m_camera.update();
 }
 
 void Game::draw() const
@@ -75,9 +104,14 @@ void Game::draw() const
  
 	const Vec2 pos{ (Scene::Size().x / 2 + Periodic::Sine1_1(3s, t) * Scene::Size().y / 2), Scene::Size().y / 2 };
 
-	for (auto& e : entities) {
-		e->draw(); 
-	}
+	{
+        const auto _ = m_camera.createTransformer(); // RAII: applies camera to all draws in this scope
+        for (auto& e : entities) {
+            e->draw();
+        }
+
+		Circle{ m_camera.getCenter(), 5 }.draw(Palette::Red);
+    }
 
 }
 
