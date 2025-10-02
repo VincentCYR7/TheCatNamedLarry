@@ -10,7 +10,7 @@ namespace {
     constexpr double kCoyoteTime  = 0.12;  // ~120 ms grace window
 }
 
-void Player::update() {
+void Player::fixedUpdate() {
     now += kFixedDt;  // advance time for coyote logic
 
     if (position.y > 1000) {
@@ -20,12 +20,16 @@ void Player::update() {
 
     prevHitbox = getHitbox();
     isMoving = false;
-    updateInput();
+    fixedUpdateInput();
     updateAnim();
 }
 
+void Player::update() {
+	updateInput();
+	
+}
 
-void Player::updateInput() {
+void Player::fixedUpdateInput() {
     // Refresh coyote window while grounded
     if (isGrounded) {
         coyoteUntil = now + kCoyoteTime;
@@ -53,15 +57,20 @@ void Player::updateInput() {
         facingLeft = false;
         isMoving = true;
     }
-    if (KeyQ.down() && QcoolDown) {
+    
+}
+
+void Player::updateInput(){
+	if (KeyQ.down() && QcoolDown) {
         isAttackingQ = true;
 		QcoolDown = false;
     }
 	if (!QcoolDown){
-		QcoolDownTimer +=0.02;
+		QcoolDownTimer += Scene::DeltaTime();
 	}
 	if (QcoolDownTimer > QcoolDownInterval) {
 		QcoolDown = true;
+		QcoolDownTimer = 0;
 	}
 }
 
@@ -181,8 +190,8 @@ void Player::draw() {
 
 	if (isAttackingQ){
 		Vec2 atkPos;
-		if (facingLeft) atkPos = Vec2{drawPosition.x - 90, drawPosition.y - 5};
-		else atkPos = Vec2{drawPosition.x + 90, drawPosition.y - 5};
+		if (facingLeft) atkPos = Vec2{drawPosition.x - 90, drawPosition.y};
+		else atkPos = Vec2{drawPosition.x + 90, drawPosition.y};
 		clawAtk5.scaled(2).mirrored(facingLeft).drawAt(atkPos);
 	}
 

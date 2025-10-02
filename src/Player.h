@@ -8,8 +8,10 @@ public:
 	~Player() {};
 
     void update() override;
+	void fixedUpdate();
     void draw() override;
 	void updateInput();
+	void fixedUpdateInput();
 	void updateAnim();
 	
 	Rect hitbox;
@@ -58,7 +60,7 @@ private:
 
 	bool isAttackingQ = false;
 	bool QcoolDown = true;
-	double QcoolDownInterval = 5;
+	double QcoolDownInterval = 2;
 	double QcoolDownTimer = 0;
 
 	

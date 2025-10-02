@@ -22,9 +22,13 @@ Game::Game(const InitData& init)
 
 
 
-	for (int i = 0; i < 10; ++i) {
+	for (int i = 0; i < 16; ++i) {
 		Vec2 pos;
-		if(i > 4) {
+		if ( i > 11 ) {
+			pos = Vec2{ 200 + i * 100, 600 }; 
+		} else if (i > 9) {
+			pos = Vec2{ 100 + i * 100, 500};
+		} else if(i > 4) {
 			pos = Vec2{ 100 + i * 100, 400 }; 
 		} else {
 			pos = Vec2{ 100 + i * 100, 500 }; 
@@ -52,13 +56,13 @@ void Game::update()
 		collisionManager->checkCollisions(entities);
 		collisionManager->resolveGrounding(player, platforms);
 		accumulator -= h;
-		player->update();
+		player->fixedUpdate();
 		updateCamera();
 	}
+	player->update();
 
-
-	//std::sort(entities.begin(), entities.end(),
-	//[](const auto& a, const auto& b) { return a->getY() < b->getY(); });
+	std::sort(entities.begin(), entities.end(),
+	[](const auto& a, const auto& b) { return a->getY() < b->getY(); });
 	
 	platforms.clear();
 	platforms.reserve(entities.size());
