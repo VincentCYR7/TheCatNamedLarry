@@ -53,9 +53,16 @@ void Player::updateInput() {
         facingLeft = false;
         isMoving = true;
     }
-    if (KeyQ.pressed()) {
-        ClearPrint();
+    if (KeyQ.down() && QcoolDown) {
+        isAttackingQ = true;
+		QcoolDown = false;
     }
+	if (!QcoolDown){
+		QcoolDownTimer +=0.02;
+	}
+	if (QcoolDownTimer > QcoolDownInterval) {
+		QcoolDown = true;
+	}
 }
 
 
@@ -97,7 +104,14 @@ void Player::updateAnim(){
             }
         }
 
-        // Blink trigger: only when grounded, idle, at frame 1
+		if (isAttackingQ) {
+			if (isAttackingQ) {
+ 
+				isAttackingQ = false;
+			}
+		}
+    
+		// Blink trigger: only when grounded, idle, at frame 1
         if (!airborne && !isMoving && curSpriteIdle == 1) {
             isBlinking = (Random(0, 6) == 3);
         }
@@ -165,6 +179,12 @@ void Player::draw() {
     	}	
 	}
 
+	if (isAttackingQ){
+		Vec2 atkPos;
+		if (facingLeft) atkPos = Vec2{drawPosition.x - 90, drawPosition.y - 5};
+		else atkPos = Vec2{drawPosition.x + 90, drawPosition.y - 5};
+		clawAtk5.scaled(2).mirrored(facingLeft).drawAt(atkPos);
+	}
 
 	//getHitbox().drawFrame(2, 0, Palette::Red);
 	//Circle(position.x, position.y, 2).draw();

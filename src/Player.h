@@ -40,14 +40,26 @@ private:
     const Texture larryIdle6Texture{U"Assets/Larry/LarryIdle6.png"};
     const Texture larryIdle7Texture{U"Assets/Larry/LarryIdle7.png"};
 
+	const Texture clawAtk0{U"Assets/Claw/claws0.png"};
+	const Texture clawAtk1{U"Assets/Claw/claws1.png"};
+	const Texture clawAtk2{U"Assets/Claw/claws2.png"};
+	const Texture clawAtk3{U"Assets/Claw/claws3.png"};
+	const Texture clawAtk4{U"Assets/Claw/claws4.png"};
+	const Texture clawAtk5{U"Assets/Claw/claws5.png"};
+
 	bool isMoving = false;
 	bool isBlinking = false;
 	int curSpriteMoving = 0;
 	int curSpriteIdle = 0;
 	double animInterval = 0.3;
-	float animTimer = 0;
+	double animTimer = 0;
 	double now = 0.0;          // running time in seconds (or your fixed dt units)
     double coyoteUntil = 0.0;  // time until which jump is allowed after leaving ground
+
+	bool isAttackingQ = false;
+	bool QcoolDown = true;
+	double QcoolDownInterval = 5;
+	double QcoolDownTimer = 0;
 
 	
 };
