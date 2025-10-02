@@ -92,7 +92,7 @@ void Game::updateCamera() {
 		newCenter.y = std::round(newCenter.y);
 		m_camera.setCenter(newCenter);
 	}
-	m_camera.update();
+
 }
 
 void Game::draw() const
@@ -110,7 +110,7 @@ void Game::draw() const
             e->draw();
         }
 
-		Circle{ m_camera.getCenter(), 5 }.draw(Palette::Red);
+		//Circle{ m_camera.getCenter(), 5 }.draw(Palette::Red);
     }
 
 }
