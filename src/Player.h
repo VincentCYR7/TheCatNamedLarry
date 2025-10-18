@@ -59,9 +59,12 @@ private:
     double coyoteUntil = 0.0;  // time until which jump is allowed after leaving ground
 
 	bool isAttackingQ = false;
+	double QattackInterval = 2;
+	double QattackTimer = 0;
 	bool QcoolDown = true;
 	double QcoolDownInterval = 2;
 	double QcoolDownTimer = 0;
+
 
 	
 };

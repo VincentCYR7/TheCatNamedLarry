@@ -59,7 +59,7 @@ void CollisionManager::handleCollision(Entity* a, Entity* b) {
         pen = oy;
     }
 
-    // Who moves? (platforms/static don't)
+
     const bool aStatic = isStaticEntity(a);
     const bool bStatic = isStaticEntity(b);
 
@@ -71,7 +71,7 @@ void CollisionManager::handleCollision(Entity* a, Entity* b) {
         b->SetPos(b->GetPos() + corr * 0.5);
     } else if (!aStatic && bStatic) {
         // move A only
-        // optional hover for floor contacts
+
         if (kHover > 0.0 && n.y < 0.0) corr.y += kHover;
         a->SetPos(a->GetPos() - corr);
     } else if (aStatic && !bStatic) {

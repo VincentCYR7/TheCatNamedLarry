@@ -114,9 +114,11 @@ void Player::updateAnim(){
         }
 
 		if (isAttackingQ) {
-			if (isAttackingQ) {
- 
+			if (QattackTimer < QattackInterval) {
+				QattackTimer ++;
+			} else {
 				isAttackingQ = false;
+				QattackTimer = 0;
 			}
 		}
     
