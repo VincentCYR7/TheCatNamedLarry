@@ -46,7 +46,7 @@ void CollisionManager::handleCollision(Entity* a, Entity* b) {
     const s3d::Vec2 d = cb - ca;
     const double ox = (ha.x + hb.x) - std::abs(d.x);
     const double oy = (ha.y + hb.y) - std::abs(d.y);
-    if (ox <= 0 || oy <= 0) return; // no longer overlapping
+    if (ox <= 0 || oy <= 0) return; 
 
     // MTV normal & penetration (push along the smaller overlap)
     s3d::Vec2 n;
@@ -83,8 +83,7 @@ void CollisionManager::handleCollision(Entity* a, Entity* b) {
         return;
     }
 
-    // Zero the normal component of velocity (no sticking through)
-    // Note: we use each body's own velocity against the collision normal.
+    // Zero the normal component of velocity 
     const double vAn = dot(a->velocity, n);
     const double vBn = dot(b->velocity, n);
 
